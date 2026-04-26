@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions d'Utilisation - Ai Job Hunt{% endblock %}
+
+{% block body %}
+    <div class="layout">
+        <header class="topbar">
+            <div class="topbar__inner">
+                <div class="topbar__left">
+                    <a class="brand brand--link" href="{{ path('app_home') }}">
+                        <span class="brand__dot"></span>
+                        <span>Ai Job Hunt</span>
+                    </a>
+                </div>
+                <div class="topbar__actions">
+                    <a class="btn btn--ghost btn--small" href="{{ path('app_home') }}">Retour</a>
+                    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Basculer le theme" title="Basculer le theme">
+                        <span class="theme-toggle__icon" aria-hidden="true">☀️</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="home">
+            <section class="home__card">
+                <h1>Conditions Générales d'Utilisation</h1>
+                
+                <p><em>Dernière mise à jour : {{ "now"|date("d/m/Y") }}</em></p>
+
+                <h2>1. Objet</h2>
+                <p>
+                    Les présentes Conditions Générales d'Utilisation (CGU) ont pour objet de définir les modalités 
+                    d'utilisation de la plateforme Ai Job Hunt.
+                </p>
+
+                <h2>2. Acceptation des CGU</h2>
+                <p>
+                    L'utilisation de ce site implique l'acceptation pleine et entière des présentes CGU. 
+                    En créant un compte, vous acceptez ces conditions.
+                </p>
+
+                <h2>3. Description du service</h2>
+                <p>
+                    Ai Job Hunt est une plateforme de gestion de candidatures qui permet aux utilisateurs de :
+                </p>
+                <ul>
+                    <li>Consulter des offres d'emploi agrégées depuis différentes sources</li>
+                    <li>Suivre leurs candidatures</li>
+                    <li>Gérer leur recherche d'emploi</li>
+                </ul>
+
+                <h2>4. Inscription et compte utilisateur</h2>
+                <p>
+                    Pour utiliser le service, vous devez créer un compte en fournissant une adresse email valide 
+                    et un mot de passe sécurisé. Vous êtes responsable de la confidentialité de vos identifiants.
+                </p>
+
+                <h2>5. Utilisation du service</h2>
+                <p>Vous vous engagez à :</p>
+                <ul>
+                    <li>Utiliser le service de manière légale et conforme</li>
+                    <li>Ne pas tenter de compromettre la sécurité du site</li>
+                    <li>Ne pas utiliser le service à des fins commerciales sans autorisation</li>
+                    <li>Fournir des informations exactes</li>
+                </ul>
+
+                <h2>6. Propriété intellectuelle</h2>
+                <p>
+                    Le contenu, la structure et le design du site sont protégés par le droit d'auteur. 
+                    Les offres d'emploi affichées restent la propriété de leurs éditeurs respectifs.
+                </p>
+
+                <h2>7. Responsabilité</h2>
+                <p>
+                    Ai Job Hunt agit comme un agrégateur d'offres d'emploi. Nous ne sommes pas responsables :
+                </p>
+                <ul>
+                    <li>De l'exactitude des offres d'emploi affichées</li>
+                    <li>Des pratiques de recrutement des entreprises</li>
+                    <li>Des résultats de vos candidatures</li>
+                </ul>
+
+                <h2>8. Disponibilité du service</h2>
+                <p>
+                    Nous nous efforçons d'assurer la disponibilité du service 24h/24 et 7j/7, mais nous ne pouvons 
+                    garantir une disponibilité continue. Des interruptions pour maintenance peuvent survenir.
+                </p>
+
+                <h2>9. Modification des CGU</h2>
+                <p>
+                    Nous nous réservons le droit de modifier ces CGU à tout moment. Les utilisateurs seront informés 
+                    des modifications importantes.
+                </p>
+
+                <h2>10. Résiliation</h2>
+                <p>
+                    Vous pouvez supprimer votre compte à tout moment en nous contactant. Nous nous réservons le droit 
+                    de suspendre ou supprimer un compte en cas de non-respect des présentes CGU.
+                </p>
+
+                <h2>11. Droit applicable</h2>
+                <p>
+                    Les présentes CGU sont régies par le droit français. En cas de litige, les tribunaux français 
+                    seront seuls compétents.
+                </p>
+
+                <h2>12. Contact</h2>
+                <p>
+                    Pour toute question concernant ces CGU, contactez-nous à :<br>
+                    <strong>Email :</strong> <strong>augustin.dille@yahoo.fr</strong>
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        (function () {
+            const storageKey = 'theme-preference';
+            const toggleButton = document.getElementById('theme-toggle');
+            const toggleIcon = toggleButton ? toggleButton.querySelector('.theme-toggle__icon') : null;
+            const body = document.body;
+
+            if (!toggleButton) {
+                return;
+            }
+
+            const applyTheme = (theme) => {
+                const isLight = theme === 'light';
+                body.classList.toggle('light-theme', isLight);
+                if (toggleIcon) {
+                    toggleIcon.textContent = isLight ? '🌙' : '☀️';
+                }
+                toggleButton.setAttribute('aria-label', isLight ? 'Passer en mode sombre' : 'Passer en mode clair');
+                toggleButton.setAttribute('title', isLight ? 'Passer en mode sombre' : 'Passer en mode clair');
+            };
+
+            const savedTheme = localStorage.getItem(storageKey);
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                applyTheme(savedTheme);
+            } else {
+                applyTheme('dark');
+            }
+
+            toggleButton.addEventListener('click', function () {
+                const nextTheme = body.classList.contains('light-theme') ? 'dark' : 'light';
+                localStorage.setItem(storageKey, nextTheme);
+                applyTheme(nextTheme);
+            });
+        })();
+    </script>
+{% endblock %}

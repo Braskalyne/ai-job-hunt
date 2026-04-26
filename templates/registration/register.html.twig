@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sign Up - Ai Job Hunt{% endblock %}
+
+{% block body %}
+    <div class="layout">
+        <header class="topbar">
+            <div class="topbar__inner">
+                <a class="brand brand--link" href="{{ path('app_home') }}">
+                    <span class="brand__dot"></span>
+                    <span>Ai Job Hunt</span>
+                </a>
+            </div>
+        </header>
+
+        <main class="auth">
+            <section class="auth__card">
+                <h1 class="auth__title">Create your account</h1>
+
+                {{ form_start(registrationForm, {'attr': {'class': 'auth__form'}}) }}
+                    {{ form_row(registrationForm.email) }}
+                    {{ form_row(registrationForm.plainPassword) }}
+                    {{ form_row(registrationForm.fullName) }}
+                    <button type="submit" class="btn btn--primary">Sign Up</button>
+                {{ form_end(registrationForm) }}
+
+                <p class="auth__footer">Already have an account? <a href="{{ path('app_login') }}">Log in</a></p>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer__inner">
+                <nav class="footer__links">
+                    <a href="{{ path('app_legal_notice') }}" class="footer__link">Mentions légales</a>
+                    <a href="{{ path('app_privacy_policy') }}" class="footer__link">Politique de confidentialité</a>
+                    <a href="{{ path('app_terms') }}" class="footer__link">CGU</a>
+                </nav>
+                <p class="footer__copyright">&copy; {{ "now"|date("Y") }} Ai Job Hunt. Tous droits réservés.</p>
+            </div>
+        </footer>
+    </div>
+{% endblock %}

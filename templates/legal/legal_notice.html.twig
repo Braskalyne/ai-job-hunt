@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions Légales - Ai Job Hunt{% endblock %}
+
+{% block body %}
+    <div class="layout">
+        <header class="topbar">
+            <div class="topbar__inner">
+                <div class="topbar__left">
+                    <a class="brand brand--link" href="{{ path('app_home') }}">
+                        <span class="brand__dot"></span>
+                        <span>Ai Job Hunt</span>
+                    </a>
+                </div>
+                <div class="topbar__actions">
+                    <a class="btn btn--ghost btn--small" href="{{ path('app_home') }}">Retour</a>
+                    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Basculer le theme" title="Basculer le theme">
+                        <span class="theme-toggle__icon" aria-hidden="true">☀️</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="home">
+            <section class="home__card">
+                <h1>Mentions Légales</h1>
+                
+                <h2>1. Éditeur du site</h2>
+                <p>
+                    <strong>Nom :</strong> Augustin Gantelmi d'Ille<br>
+                    <strong>Email :</strong> augustin.dille@yahoo.fr<br>
+                    <strong>Adresse :</strong> Lyon, France
+                </p>
+                <p class="auth__footer" style="font-size: 0.9rem; margin-top: 0.5rem;">
+                    <em>Note : Ce site est édité à titre personnel et non commercial.</em>
+                </p>
+
+                <h2>2. Directeur de la publication</h2>
+                <p>
+                    Augustin Gantelmi d'Ille
+                </p>
+
+                <h2>3. Hébergeur</h2>
+                <p>
+                    <strong>Hébergeur :</strong> OVH SAS<br>
+                    <strong>Adresse :</strong> 2 rue Kellermann, 59100 Roubaix, France<br>
+                    <strong>Téléphone :</strong> +33 (0)3 20 20 09 58
+                </p>
+
+                <h2>4. Propriété intellectuelle</h2>
+                <p>
+                    L'ensemble du contenu de ce site (textes, images, vidéos, etc.) est protégé par le droit d'auteur. 
+                    Toute reproduction, distribution ou utilisation sans autorisation préalable est interdite.
+                </p>
+
+                <h2>5. Protection des données personnelles</h2>
+                <p>
+                    Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, 
+                    de rectification et de suppression de vos données personnelles. 
+                    Pour plus d'informations, consultez notre <a href="{{ path('app_privacy_policy') }}">Politique de confidentialité</a>.
+                </p>
+
+                <h2>6. Cookies</h2>
+                <p>
+                    Ce site utilise uniquement des cookies essentiels au fonctionnement du site (session, authentification) 
+                    et un cookie de préférence de thème (clair/sombre) stocké localement dans votre navigateur.
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        (function () {
+            const storageKey = 'theme-preference';
+            const toggleButton = document.getElementById('theme-toggle');
+            const toggleIcon = toggleButton ? toggleButton.querySelector('.theme-toggle__icon') : null;
+            const body = document.body;
+
+            if (!toggleButton) {
+                return;
+            }
+
+            const applyTheme = (theme) => {
+                const isLight = theme === 'light';
+                body.classList.toggle('light-theme', isLight);
+                if (toggleIcon) {
+                    toggleIcon.textContent = isLight ? '🌙' : '☀️';
+                }
+                toggleButton.setAttribute('aria-label', isLight ? 'Passer en mode sombre' : 'Passer en mode clair');
+                toggleButton.setAttribute('title', isLight ? 'Passer en mode sombre' : 'Passer en mode clair');
+            };
+
+            const savedTheme = localStorage.getItem(storageKey);
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                applyTheme(savedTheme);
+            } else {
+                applyTheme('dark');
+            }
+
+            toggleButton.addEventListener('click', function () {
+                const nextTheme = body.classList.contains('light-theme') ? 'dark' : 'light';
+                localStorage.setItem(storageKey, nextTheme);
+                applyTheme(nextTheme);
+            });
+        })();
+    </script>
+{% endblock %}

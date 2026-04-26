@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Jobs - Ai Job Hunt{% endblock %}
+
+{% block body %}
+    <div class="layout">
+        <header class="topbar">
+            <div class="topbar__inner">
+                <div class="topbar__left">
+                    <a class="brand brand--link" href="{{ path('app_home') }}">
+                        <span class="brand__dot"></span>
+                        <span>Ai Job Hunt</span>
+                    </a>
+                    {% if app.user %}
+                        <nav class="topbar__nav" aria-label="Navigation principale">
+                            <a class="topbar__nav-link is-active" href="{{ path('app_jobs') }}">Jobs</a>
+                            <a class="topbar__nav-link" href="{{ path('app_tracking') }}">Suivi</a>
+                        </nav>
+                    {% endif %}
+                </div>
+                <div class="topbar__actions">
+                    <a class="btn btn--ghost btn--small" href="{{ path('app_logout') }}">Logout</a>
+                    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Basculer le theme" title="Basculer le theme">
+                        <span class="theme-toggle__icon" aria-hidden="true">☀️</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="home">
+            <section class="home__card">
+                <span class="home__badge">WTTJ feed</span>
+                <h1>Jobs feed</h1>
+                <p>Les offres les plus recentes sont deja affichees en haut. Tu peux filtrer par ville et date de publication.</p>
+
+                <form method="get" class="jobs-filters">
+                    <div>
+                        <label for="city">Ville</label>
+                        <input id="city" name="city" type="text" value="{{ selectedCity }}" placeholder="Ex: Paris, Lyon...">
+                    </div>
+                    <div>
+                        <label for="date">Publie depuis</label>
+                        <input id="date" name="date" type="date" value="{{ selectedDate }}">
+                    </div>
+                    <div class="jobs-filters__actions">
+                        <button type="submit" class="btn btn--primary btn--small">Filtrer</button>
+                        <a class="btn btn--ghost btn--small" href="{{ path('app_jobs') }}">Reset</a>
+                    </div>
+                </form>
+
+                <div class="jobs-list">
+                    {% if jobs is empty %}
+                        <p class="jobs-list__empty">
+                            Aucune offre ne correspond à vos critères. Essayez de saisir une ville dans le champ ci-dessus (ex: Paris, Lyon, Marseille) pour afficher les offres disponibles.
+                        </p>
+                    {% else %}
+                        {% for job in jobs %}
+                            {% set application = applicationsByJobId[job.id] ?? null %}
+                            <article class="job-card">
+                                <div class="job-card__content">
+                                    <h2 class="job-card__title">
+                                        <a href="{{ job.url }}" target="_blank" rel="noopener noreferrer">{{ job.title }}</a>
+                                    </h2>
+                                    <p class="job-card__meta">
+                                        {{ job.company }}{% if job.location %} - {{ job.location }}{% endif %}
+                                        <span class="job-card__source job-card__source--{{ job.source }}">
+                                            {% if job.source == 'wttj' %}WTTJ
+                                            {% elseif job.source == 'jsearch' %}JSearch
+                                            {% elseif job.source == 'indeed' %}Indeed
+                                            {% else %}{{ job.source }}
+                                            {% endif %}
+                                        </span>
+                                    </p>
+
+                                    <div class="job-card__controls">
+                                        <form method="post" action="{{ path('app_jobs_apply', {id: job.id}) }}?{{ app.request.queryString }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('apply_job_' ~ job.id) }}">
+                                            <button type="submit" class="btn btn--primary btn--small" {% if application and application.status == 'applied' %}disabled{% endif %}>
+                                                {% if application and application.status == 'applied' %}Candidature envoyee{% else %}Candidater{% endif %}
+                                            </button>
+                                        </form>
+
+                                        <form method="post" action="{{ path('app_jobs_status', {id: job.id}) }}?{{ app.request.queryString }}" class="job-card__status-form">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('status_job_' ~ job.id) }}">
+                                            <label for="status-{{ job.id }}">Statut</label>
+                                            <select id="status-{{ job.id }}" name="status" onchange="this.form.submit()">
+                                                {% for status in statuses %}
+                                                    <option value="{{ status }}" {% if application and application.status == status %}selected{% elseif not application and status == 'to_apply' %}selected{% endif %}>
+                                                        {% if status == 'to_apply' %}A candidater
+                                                        {% elseif status == 'applied' %}Candidature Envoyee
+                                                        {% elseif status == 'hr_interview' %}Entretien RH Fait
+                                                        {% elseif status == 'tech_interview' %}Entretien Technique Fait
+                                                        {% elseif status == 'rejected' %}Refuse
+                                                        {% elseif status == 'not_target' %}Pas ma cible
+                                                        {% endif %}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="job-card__aside">
+                                    {% if job.publishedAt %}
+                                        <span class="job-card__date">{{ job.publishedAt|date('d/m/Y') }}</span>
+                                    {% endif %}
+                                    {% if application and application.appliedAt %}
+                                        <span class="job-card__date">Postule le {{ application.appliedAt|date('d/m/Y') }}</span>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer__inner">
+                <nav class="footer__links">
+                    <a href="{{ path('app_legal_notice') }}" class="footer__link">Mentions légales</a>
+                    <a href="{{ path('app_privacy_policy') }}" class="footer__link">Politique de confidentialité</a>
+                    <a href="{{ path('app_terms') }}" class="footer__link">CGU</a>
+                </nav>
+                <p class="footer__copyright">&copy; {{ "now"|date("Y") }} Ai Job Hunt. Tous droits réservés.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        (function () {
+            const storageKey = 'theme-preference';
+            const toggleButton = document.getElementById('theme-toggle');
+            const toggleIcon = toggleButton ? toggleButton.querySelector('.theme-toggle__icon') : null;
+            const body = document.body;
+
+            if (!toggleButton) {
+                return;
+            }
+
+            const applyTheme = (theme) => {
+                const isLight = theme === 'light';
+                body.classList.toggle('light-theme', isLight);
+                if (toggleIcon) {
+                    toggleIcon.textContent = isLight ? '🌙' : '☀️';
+                }
+                toggleButton.setAttribute('aria-label', isLight ? 'Passer en mode sombre' : 'Passer en mode clair');
+                toggleButton.setAttribute('title', isLight ? 'Passer en mode sombre' : 'Passer en mode clair');
+            };
+
+            const savedTheme = localStorage.getItem(storageKey);
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                applyTheme(savedTheme);
+            } else {
+                applyTheme('dark');
+            }
+
+            toggleButton.addEventListener('click', function () {
+                const nextTheme = body.classList.contains('light-theme') ? 'dark' : 'light';
+                localStorage.setItem(storageKey, nextTheme);
+                applyTheme(nextTheme);
+            });
+        })();
+    </script>
+{% endblock %}

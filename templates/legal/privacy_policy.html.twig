@@ -1,0 +1,158 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de Confidentialité - Ai Job Hunt{% endblock %}
+
+{% block body %}
+    <div class="layout">
+        <header class="topbar">
+            <div class="topbar__inner">
+                <div class="topbar__left">
+                    <a class="brand brand--link" href="{{ path('app_home') }}">
+                        <span class="brand__dot"></span>
+                        <span>Ai Job Hunt</span>
+                    </a>
+                </div>
+                <div class="topbar__actions">
+                    <a class="btn btn--ghost btn--small" href="{{ path('app_home') }}">Retour</a>
+                    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Basculer le theme" title="Basculer le theme">
+                        <span class="theme-toggle__icon" aria-hidden="true">☀️</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="home">
+            <section class="home__card">
+                <h1>Politique de Confidentialité</h1>
+                
+                <p><em>Dernière mise à jour : {{ "now"|date("d/m/Y") }}</em></p>
+
+                <h2>1. Responsable du traitement</h2>
+                <p>
+                    Le responsable du traitement des données personnelles est :<br>
+                    <strong>Augustin Gantelmi d'Ille</strong><br>
+                    Email : <strong>augustin.dille@yahoo.fr</strong>
+                </p>
+
+                <h2>2. Données collectées</h2>
+                <p>Nous collectons les données suivantes :</p>
+                <ul>
+                    <li><strong>Données de compte :</strong> Adresse email, mot de passe (hashé)</li>
+                    <li><strong>Données d'utilisation :</strong> Offres d'emploi consultées, candidatures suivies, statuts de candidature</li>
+                    <li><strong>Cookies :</strong> Cookie de session (authentification) et préférence de thème (localStorage)</li>
+                </ul>
+
+                <h2>3. Finalités du traitement</h2>
+                <p>Vos données sont utilisées pour :</p>
+                <ul>
+                    <li>Créer et gérer votre compte utilisateur</li>
+                    <li>Vous permettre de suivre vos candidatures</li>
+                    <li>Améliorer nos services</li>
+                    <li>Vous authentifier sur la plateforme</li>
+                </ul>
+
+                <h2>4. Base légale</h2>
+                <p>
+                    Le traitement de vos données repose sur votre consentement lors de la création de votre compte 
+                    et sur l'exécution du contrat d'utilisation du service.
+                </p>
+
+                <h2>5. Durée de conservation</h2>
+                <p>
+                    Vos données sont conservées tant que votre compte est actif. 
+                    En cas de suppression de compte, vos données sont supprimées sous 30 jours.
+                </p>
+
+                <h2>6. Vos droits (RGPD)</h2>
+                <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+                <ul>
+                    <li><strong>Droit d'accès :</strong> Obtenir une copie de vos données</li>
+                    <li><strong>Droit de rectification :</strong> Corriger vos données inexactes</li>
+                    <li><strong>Droit à l'effacement :</strong> Supprimer vos données</li>
+                    <li><strong>Droit à la portabilité :</strong> Recevoir vos données dans un format structuré</li>
+                    <li><strong>Droit d'opposition :</strong> Vous opposer au traitement de vos données</li>
+                </ul>
+                <p>
+                    Pour exercer vos droits, contactez-nous à : <strong>augustin.dille@yahoo.fr</strong>
+                </p>
+
+                <h2>7. Sécurité</h2>
+                <p>
+                    Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles pour protéger vos données :
+                </p>
+                <ul>
+                    <li>Mots de passe hashés avec algorithme sécurisé (bcrypt/argon2)</li>
+                    <li>Connexion HTTPS (en production)</li>
+                    <li>Protection CSRF sur tous les formulaires</li>
+                    <li>Accès restreint aux données</li>
+                </ul>
+
+                <h2>8. Cookies</h2>
+                <p>
+                    Nous utilisons uniquement des cookies essentiels :
+                </p>
+                <ul>
+                    <li><strong>Cookie de session (PHPSESSID) :</strong> Nécessaire pour l'authentification et le fonctionnement du site</li>
+                    <li><strong>Préférence de thème :</strong> Stocké en localStorage (non transmis au serveur)</li>
+                </ul>
+                <p>
+                    Aucun cookie de tracking ou analytique n'est utilisé.
+                </p>
+
+                <h2>9. Partage des données</h2>
+                <p>
+                    Vos données ne sont pas partagées avec des tiers. Les offres d'emploi affichées proviennent d'API publiques 
+                    (Welcome to the Jungle, JSearch, Indeed) mais aucune donnée personnelle n'est transmise à ces services.
+                </p>
+
+                <h2>10. Contact</h2>
+                <p>
+                    Pour toute question concernant cette politique de confidentialité, contactez-nous à :<br>
+                    <strong>Email :</strong> <strong>augustin.dille@yahoo.fr</strong>
+                </p>
+
+                <h2>11. Autorité de contrôle</h2>
+                <p>
+                    Si vous estimez que vos droits ne sont pas respectés, vous pouvez déposer une réclamation auprès de la CNIL :
+                    <a href="https://www.cnil.fr" target="_blank" rel="noopener">www.cnil.fr</a>
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        (function () {
+            const storageKey = 'theme-preference';
+            const toggleButton = document.getElementById('theme-toggle');
+            const toggleIcon = toggleButton ? toggleButton.querySelector('.theme-toggle__icon') : null;
+            const body = document.body;
+
+            if (!toggleButton) {
+                return;
+            }
+
+            const applyTheme = (theme) => {
+                const isLight = theme === 'light';
+                body.classList.toggle('light-theme', isLight);
+                if (toggleIcon) {
+                    toggleIcon.textContent = isLight ? '🌙' : '☀️';
+                }
+                toggleButton.setAttribute('aria-label', isLight ? 'Passer en mode sombre' : 'Passer en mode clair');
+                toggleButton.setAttribute('title', isLight ? 'Passer en mode sombre' : 'Passer en mode clair');
+            };
+
+            const savedTheme = localStorage.getItem(storageKey);
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                applyTheme(savedTheme);
+            } else {
+                applyTheme('dark');
+            }
+
+            toggleButton.addEventListener('click', function () {
+                const nextTheme = body.classList.contains('light-theme') ? 'dark' : 'light';
+                localStorage.setItem(storageKey, nextTheme);
+                applyTheme(nextTheme);
+            });
+        })();
+    </script>
+{% endblock %}

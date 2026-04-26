@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log In - Ai Job Hunt{% endblock %}
+
+{% block body %}
+    <div class="layout">
+        <header class="topbar">
+            <div class="topbar__inner">
+                <a class="brand brand--link" href="{{ path('app_home') }}">
+                    <span class="brand__dot"></span>
+                    <span>Ai Job Hunt</span>
+                </a>
+            </div>
+        </header>
+
+        <main class="auth">
+            <section class="auth__card">
+                <h1 class="auth__title">Log in</h1>
+
+                {% if error %}
+                    <p class="auth__error">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                {% endif %}
+
+                {% for message in app.flashes('success') %}
+                    <p class="auth__success">{{ message }}</p>
+                {% endfor %}
+
+                <form method="post" class="auth__form">
+                    <label for="username">Email</label>
+                    <input type="email" value="{{ last_username }}" name="_username" id="username" autocomplete="email" required autofocus>
+
+                    <label for="password">Password</label>
+                    <input type="password" name="_password" id="password" autocomplete="current-password" required>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="btn btn--primary">Log In</button>
+                </form>
+
+                <p class="auth__footer">No account yet? <a href="{{ path('app_register') }}">Sign up</a></p>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer__inner">
+                <nav class="footer__links">
+                    <a href="{{ path('app_legal_notice') }}" class="footer__link">Mentions légales</a>
+                    <a href="{{ path('app_privacy_policy') }}" class="footer__link">Politique de confidentialité</a>
+                    <a href="{{ path('app_terms') }}" class="footer__link">CGU</a>
+                </nav>
+                <p class="footer__copyright">&copy; {{ "now"|date("Y") }} Ai Job Hunt. Tous droits réservés.</p>
+            </div>
+        </footer>
+    </div>
+{% endblock %}
