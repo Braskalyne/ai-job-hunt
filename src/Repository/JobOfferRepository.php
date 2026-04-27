@@ -32,12 +32,17 @@ class JobOfferRepository extends ServiceEntityRepository
     /**
      * @return list<JobOffer>
      */
-    public function findLatestFiltered(?string $city, ?\DateTimeImmutable $publishedAfter, int $limit = 100): array
+    public function findLatestFiltered(?string $jobTitle, ?string $city, ?\DateTimeImmutable $publishedAfter, int $limit = 100): array
     {
         $qb = $this->createQueryBuilder('job')
             ->orderBy('job.publishedAt', 'DESC')
             ->addOrderBy('job.updatedAt', 'DESC')
             ->setMaxResults($limit);
+
+        if (null !== $jobTitle && '' !== $jobTitle) {
+            $qb->andWhere('LOWER(job.title) LIKE :jobTitle')
+                ->setParameter('jobTitle', '%' . mb_strtolower($jobTitle) . '%');
+        }
 
         if (null !== $city && '' !== $city) {
             $qb->andWhere('LOWER(job.location) LIKE :city')

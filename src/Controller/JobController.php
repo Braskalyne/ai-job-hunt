@@ -41,7 +41,7 @@ final class JobController extends AbstractController
         // Si ville ET métier sont demandés, on vérifie si on a des résultats
         // Si non, on déclenche automatiquement un fetch depuis les sources actives
         if ($city !== '' && $job !== '') {
-            $existingJobs = $jobOfferRepository->findLatestFiltered($city, null, 5);
+            $existingJobs = $jobOfferRepository->findLatestFiltered($job, $city, null, 5);
             
             if (count($existingJobs) < 5) {
                 // Fetch from WTTJ (avec gestion d'erreur)
@@ -76,7 +76,12 @@ final class JobController extends AbstractController
             }
         }
 
-        $jobs = $jobOfferRepository->findLatestFiltered($city !== '' ? $city : null, $publishedAfter, 100);
+        $jobs = $jobOfferRepository->findLatestFiltered(
+            $job !== '' ? $job : null,
+            $city !== '' ? $city : null,
+            $publishedAfter,
+            100
+        );
         $jobIds = array_values(array_filter(array_map(static fn (JobOffer $job): ?int => $job->getId(), $jobs)));
 
         $user = $this->getUser();
