@@ -33,20 +33,21 @@ final class JobController extends AbstractController
         IndeedJobScraper $indeedScraper,
         EntityManagerInterface $entityManager,
     ): Response {
+        $job = trim((string) $request->query->get('job', ''));
         $city = trim((string) $request->query->get('city', ''));
         $dateFilterRaw = trim((string) $request->query->get('date', ''));
         $publishedAfter = $this->parsePublishedAfter($dateFilterRaw);
 
-        // Si une ville est demandée, on vérifie si on a des résultats
+        // Si ville ET métier sont demandés, on vérifie si on a des résultats
         // Si non, on déclenche automatiquement un fetch depuis les sources actives
-        if ($city !== '') {
+        if ($city !== '' && $job !== '') {
             $existingJobs = $jobOfferRepository->findLatestFiltered($city, null, 5);
             
             if (count($existingJobs) < 5) {
                 // Fetch from WTTJ (avec gestion d'erreur)
                 try {
                     $this->fetchAndSaveJobs(
-                        $wttjScraper->fetchJobs('developpeur php', $city, 15),
+                        $wttjScraper->fetchJobs($job, $city, 15),
                         'wttj',
                         $jobOfferRepository,
                         $entityManager
@@ -59,7 +60,7 @@ final class JobController extends AbstractController
                 // Fetch from France Travail (avec gestion d'erreur)
                 try {
                     $this->fetchAndSaveJobs(
-                        $franceTravailScraper->fetchJobs('développeur php', $city, 15),
+                        $franceTravailScraper->fetchJobs($job, $city, 15),
                         'francetravail',
                         $jobOfferRepository,
                         $entityManager
@@ -88,6 +89,7 @@ final class JobController extends AbstractController
         return $this->render('jobs/index.html.twig', [
             'jobs' => $jobs,
             'applicationsByJobId' => $applicationsByJobId,
+            'selectedJob' => $job,
             'selectedCity' => $city,
             'selectedDate' => $dateFilterRaw,
             'statuses' => JobApplication::statuses(),

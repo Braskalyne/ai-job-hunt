@@ -29,17 +29,21 @@
 
         <main class="home">
             <section class="home__card">
-                <span class="home__badge">WTTJ feed</span>
+                <span class="home__badge">WTTJ + France Travail</span>
                 <h1>Jobs feed</h1>
-                <p>Les offres les plus recentes sont deja affichees en haut. Tu peux filtrer par ville et date de publication.</p>
+                <p>Les offres les plus récentes sont déjà affichées en haut. Remplissez le métier et la ville pour lancer une recherche.</p>
 
                 <form method="get" class="jobs-filters">
                     <div>
-                        <label for="city">Ville</label>
-                        <input id="city" name="city" type="text" value="{{ selectedCity }}" placeholder="Ex: Paris, Lyon...">
+                        <label for="job">Métier *</label>
+                        <input id="job" name="job" type="text" value="{{ selectedJob }}" placeholder="Ex: développeur PHP" required>
                     </div>
                     <div>
-                        <label for="date">Publie depuis</label>
+                        <label for="city">Ville *</label>
+                        <input id="city" name="city" type="text" value="{{ selectedCity }}" placeholder="Ex: Paris, Lyon..." required>
+                    </div>
+                    <div>
+                        <label for="date">Publié depuis</label>
                         <input id="date" name="date" type="date" value="{{ selectedDate }}">
                     </div>
                     <div class="jobs-filters__actions">
@@ -51,7 +55,7 @@
                 <div class="jobs-list">
                     {% if jobs is empty %}
                         <p class="jobs-list__empty">
-                            Aucune offre ne correspond à vos critères. Essayez de saisir une ville dans le champ ci-dessus (ex: Paris, Lyon, Marseille) pour afficher les offres disponibles.
+                            Aucune offre ne correspond à vos critères. Essayez de saisir un métier et une ville dans les champs ci-dessus (ex: "développeur PHP" + "Paris") pour afficher les offres disponibles.
                         </p>
                     {% else %}
                         {% for job in jobs %}
@@ -65,6 +69,7 @@
                                         {{ job.company }}{% if job.location %} - {{ job.location }}{% endif %}
                                         <span class="job-card__source job-card__source--{{ job.source }}">
                                             {% if job.source == 'wttj' %}WTTJ
+                                            {% elseif job.source == 'francetravail' %}France Travail
                                             {% elseif job.source == 'jsearch' %}JSearch
                                             {% elseif job.source == 'indeed' %}Indeed
                                             {% else %}{{ job.source }}

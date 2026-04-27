@@ -520,6 +520,12 @@ body:not(.light-theme) {
     color: #2164f3;
 }
 
+.job-card__source--francetravail {
+    background: color-mix(in srgb, #0052cc 15%, var(--surface));
+    border-color: color-mix(in srgb, #0052cc 30%, var(--border));
+    color: #0052cc;
+}
+
 .job-card__controls {
     margin-top: 0.85rem;
     display: flex;
