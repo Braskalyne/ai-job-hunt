@@ -39,7 +39,7 @@ final class WttjJobScraper
                 'User-Agent' => 'AiJobHuntBot/1.0 (+local-dev)',
                 'Accept' => 'text/html,application/xhtml+xml',
             ],
-            'timeout' => 15,
+            'timeout' => 8,
         ]);
 
         $html = $response->getContent(false);
@@ -144,7 +144,7 @@ final class WttjJobScraper
                 'Referer' => 'https://www.welcometothejungle.com/',
                 'Origin' => 'https://www.welcometothejungle.com',
             ],
-            'timeout' => 25,
+            'timeout' => 8,
         ]);
 
         if (200 !== $response->getStatusCode()) {
