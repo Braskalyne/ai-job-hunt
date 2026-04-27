@@ -39,7 +39,7 @@ final class WttjJobScraper
                 'User-Agent' => 'AiJobHuntBot/1.0 (+local-dev)',
                 'Accept' => 'text/html,application/xhtml+xml',
             ],
-            'timeout' => 25,
+            'timeout' => 15,
         ]);
 
         $html = $response->getContent(false);

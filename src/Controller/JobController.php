@@ -43,37 +43,54 @@ final class JobController extends AbstractController
             $existingJobs = $jobOfferRepository->findLatestFiltered($city, null, 5);
             
             if (count($existingJobs) < 5) {
-                // Fetch from WTTJ
-                $this->fetchAndSaveJobs(
-                    $wttjScraper->fetchJobs('developpeur php', $city, 30),
-                    'wttj',
-                    $jobOfferRepository,
-                    $entityManager
-                );
+                // Fetch from WTTJ (avec gestion d'erreur)
+                try {
+                    $this->fetchAndSaveJobs(
+                        $wttjScraper->fetchJobs('developpeur php', $city, 30),
+                        'wttj',
+                        $jobOfferRepository,
+                        $entityManager
+                    );
+                } catch (\Throwable $e) {
+                    // Log l'erreur mais continue avec les autres sources
+                    error_log('WTTJ fetch failed for ' . $city . ': ' . $e->getMessage());
+                }
 
-                // Fetch from France Travail (ex-Pôle Emploi)
-                $this->fetchAndSaveJobs(
-                    $franceTravailScraper->fetchJobs('développeur php', $city, 30),
-                    'francetravail',
-                    $jobOfferRepository,
-                    $entityManager
-                );
+                // Fetch from France Travail (avec gestion d'erreur)
+                try {
+                    $this->fetchAndSaveJobs(
+                        $franceTravailScraper->fetchJobs('développeur php', $city, 30),
+                        'francetravail',
+                        $jobOfferRepository,
+                        $entityManager
+                    );
+                } catch (\Throwable $e) {
+                    error_log('France Travail fetch failed for ' . $city . ': ' . $e->getMessage());
+                }
 
-                // Fetch from JSearch (agrège LinkedIn, Indeed, Google Jobs)
-                $this->fetchAndSaveJobs(
-                    $jSearchScraper->fetchJobs('php developer', $city, 30),
-                    'jsearch',
-                    $jobOfferRepository,
-                    $entityManager
-                );
+                // Fetch from JSearch (avec gestion d'erreur)
+                try {
+                    $this->fetchAndSaveJobs(
+                        $jSearchScraper->fetchJobs('php developer', $city, 30),
+                        'jsearch',
+                        $jobOfferRepository,
+                        $entityManager
+                    );
+                } catch (\Throwable $e) {
+                    error_log('JSearch fetch failed for ' . $city . ': ' . $e->getMessage());
+                }
 
-                // Fetch from Indeed
-                $this->fetchAndSaveJobs(
-                    $indeedScraper->fetchJobs('php developer', $city, 30),
-                    'indeed',
-                    $jobOfferRepository,
-                    $entityManager
-                );
+                // Fetch from Indeed (avec gestion d'erreur)
+                try {
+                    $this->fetchAndSaveJobs(
+                        $indeedScraper->fetchJobs('php developer', $city, 30),
+                        'indeed',
+                        $jobOfferRepository,
+                        $entityManager
+                    );
+                } catch (\Throwable $e) {
+                    error_log('Indeed fetch failed for ' . $city . ': ' . $e->getMessage());
+                }
 
                 $entityManager->flush();
             }

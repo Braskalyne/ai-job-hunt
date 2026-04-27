@@ -55,7 +55,7 @@ final class FranceTravailScraper
                     'client_secret' => $this->franceTravailClientSecret,
                     'scope' => 'api_offresdemploiv2 o2dsoffre',
                 ]),
-                'timeout' => 15,
+                'timeout' => 10,
             ]);
 
             if (200 !== $response->getStatusCode()) {
@@ -100,7 +100,7 @@ final class FranceTravailScraper
                     'Authorization' => 'Bearer ' . $accessToken,
                     'Accept' => 'application/json',
                 ],
-                'timeout' => 30,
+                'timeout' => 15,
             ]);
 
             $statusCode = $response->getStatusCode();
