@@ -8,6 +8,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     rapidapi_key: '%env(string:RAPIDAPI_KEY)%'
+    francetravail_client_id: '%env(string:FRANCETRAVAIL_CLIENT_ID)%'
+    francetravail_client_secret: '%env(string:FRANCETRAVAIL_CLIENT_SECRET)%'
 
 services:
     # default configuration for services in *this* file
@@ -31,3 +33,9 @@ services:
     App\Service\IndeedJobScraper:
         arguments:
             $rapidApiKey: '%rapidapi_key%'
+    
+    # France Travail API configuration
+    App\Service\FranceTravailScraper:
+        arguments:
+            $franceTravailClientId: '%francetravail_client_id%'
+            $franceTravailClientSecret: '%francetravail_client_secret%'

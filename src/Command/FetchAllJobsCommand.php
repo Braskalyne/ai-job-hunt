@@ -12,7 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:jobs:fetch-all',
-    description: 'Fetch jobs from all sources (WTTJ, LinkedIn, Indeed).',
+    description: 'Fetch jobs from all sources (WTTJ, France Travail, JSearch, Indeed).',
 )]
 final class FetchAllJobsCommand extends Command
 {
@@ -39,7 +39,7 @@ final class FetchAllJobsCommand extends Command
         $totalFetched = 0;
 
         // Fetch from WTTJ
-        $io->section('1/3 - Welcome to the Jungle');
+        $io->section('1/4 - Welcome to the Jungle');
         $wttjCommand = $this->getApplication()?->find('app:jobs:fetch-wttj');
         if ($wttjCommand) {
             $wttjInput = new ArrayInput([
@@ -50,8 +50,20 @@ final class FetchAllJobsCommand extends Command
             $wttjCommand->run($wttjInput, $output);
         }
 
+        // Fetch from France Travail (ex-Pôle Emploi)
+        $io->section('2/4 - France Travail (ex-Pôle Emploi)');
+        $ftCommand = $this->getApplication()?->find('app:jobs:fetch-francetravail');
+        if ($ftCommand) {
+            $ftInput = new ArrayInput([
+                '--query' => $query,
+                '--location' => $location,
+                '--limit' => (string) $limit,
+            ]);
+            $ftCommand->run($ftInput, $output);
+        }
+
         // Fetch from JSearch (LinkedIn, Indeed, Google Jobs aggregator)
-        $io->section('2/3 - JSearch (LinkedIn + Indeed + Google)');
+        $io->section('3/4 - JSearch (LinkedIn + Indeed + Google)');
         $jsearchCommand = $this->getApplication()?->find('app:jobs:fetch-jsearch');
         if ($jsearchCommand) {
             $jsearchInput = new ArrayInput([
@@ -63,7 +75,7 @@ final class FetchAllJobsCommand extends Command
         }
 
         // Fetch from Indeed
-        $io->section('3/3 - Indeed');
+        $io->section('4/4 - Indeed');
         $indeedCommand = $this->getApplication()?->find('app:jobs:fetch-indeed');
         if ($indeedCommand) {
             $indeedInput = new ArrayInput([
