@@ -10,6 +10,7 @@ use App\Repository\JobOfferRepository;
 use App\Service\WttjJobScraper;
 use App\Service\JSearchScraper;
 use App\Service\IndeedJobScraper;
+use App\Service\FranceTravailScraper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +28,7 @@ final class JobController extends AbstractController
         JobOfferRepository $jobOfferRepository,
         JobApplicationRepository $jobApplicationRepository,
         WttjJobScraper $wttjScraper,
+        FranceTravailScraper $franceTravailScraper,
         JSearchScraper $jSearchScraper,
         IndeedJobScraper $indeedScraper,
         EntityManagerInterface $entityManager,
@@ -45,6 +47,14 @@ final class JobController extends AbstractController
                 $this->fetchAndSaveJobs(
                     $wttjScraper->fetchJobs('developpeur php', $city, 30),
                     'wttj',
+                    $jobOfferRepository,
+                    $entityManager
+                );
+
+                // Fetch from France Travail (ex-Pôle Emploi)
+                $this->fetchAndSaveJobs(
+                    $franceTravailScraper->fetchJobs('développeur php', $city, 30),
+                    'francetravail',
                     $jobOfferRepository,
                     $entityManager
                 );
