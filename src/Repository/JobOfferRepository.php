@@ -40,8 +40,8 @@ class JobOfferRepository extends ServiceEntityRepository
             ->setMaxResults($limit);
 
         if (null !== $city && '' !== $city) {
-            $qb->andWhere('LOWER(job.location) = :city')
-                ->setParameter('city', mb_strtolower($city));
+            $qb->andWhere('LOWER(job.location) LIKE :city')
+                ->setParameter('city', '%' . mb_strtolower($city) . '%');
         }
 
         if (null !== $publishedAfter) {
